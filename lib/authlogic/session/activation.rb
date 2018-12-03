@@ -60,12 +60,6 @@ module Authlogic
 
       # :nodoc:
       module InstanceMethods
-        # Making sure we are activated before we start creating objects
-        def initialize(*args)
-          raise NotActivatedError unless self.class.activated?
-          super
-        end
-
         private
 
         def controller

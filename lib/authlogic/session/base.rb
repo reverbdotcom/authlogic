@@ -15,7 +15,37 @@ module Authlogic
     # Also, to fully understand such a method (like #credentials=) you will need
     # to mentally combine all of its definitions. This is perhaps the primary
     # disadvantage of topical organization using modules.
+    #
+    # # Ongoing consolidation of modules
+    #
+    # As described above, a chain of half-a-dozen `super`s is hard to follow.
+    # So, we are consolidating all modules into this class. When we are done,
+    # there will only be this one file. It will be quite large, but it will
+    # be easier to trace execution.
+    #
+    # Once consolidation is complete, we hope to identify and extract
+    # collaborating objects. For example, there may be a "session adapter" that
+    # connects this class with the existing `ControllerAdapters`. Perhaps a
+    # data object or a state machine will reveal itself.
     class Base
+      # rubocop:disable Metrics/AbcSize
+      def initialize(*args)
+        @id = nil
+        self.scope = self.class.scope
+        unless self.class.configured_klass_methods
+          self.class.send(:alias_method, klass_name.demodulize.underscore.to_sym, :record)
+          self.class.configured_klass_methods = true
+        end
+        raise NotActivatedError unless self.class.activated?
+        unless self.class.configured_password_methods
+          configure_password_methods
+          self.class.configured_password_methods = true
+        end
+        instance_variable_set("@#{password_field}", nil)
+        self.credentials = args
+      end
+      # rubocop:enable Metrics/AbcSize
+
       include Foundation
       include Callbacks
 

@@ -98,12 +98,6 @@ module Authlogic
 
       # :nodoc:
       module InstanceMethods
-        # Setting the scope if it exists upon instantiation.
-        def initialize(*args)
-          self.scope = self.class.scope
-          super
-        end
-
         # The scope of the current object
         def scope
           @scope ||= {}

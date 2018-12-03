@@ -131,15 +131,6 @@ module Authlogic
 
       # :nodoc:
       module InstanceMethods
-        def initialize(*args)
-          unless self.class.configured_password_methods
-            configure_password_methods
-            self.class.configured_password_methods = true
-          end
-          instance_variable_set("@#{password_field}", nil)
-          super
-        end
-
         # Returns the login_field / password_field credentials combination in
         # hash form.
         def credentials

@@ -46,22 +46,6 @@ module Authlogic
 
       # :nodoc:
       module InstanceMethods
-        # Creating an alias method for the "record" method based on the klass
-        # name, so that we can do:
-        #
-        #   session.user
-        #
-        # instead of:
-        #
-        #   session.record
-        def initialize(*args)
-          unless self.class.configured_klass_methods
-            self.class.send(:alias_method, klass_name.demodulize.underscore.to_sym, :record)
-            self.class.configured_klass_methods = true
-          end
-          super
-        end
-
         private
 
         def klass
